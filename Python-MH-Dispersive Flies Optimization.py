@@ -45,7 +45,7 @@ def update_position(position, neighbour_best, swarm_best, min_values = [-5,-5], 
     return position
 
 # DFO Function
-def dispersive_fly_optimization(swarm_size = 3, min_values = [-5,-5], max_values = [5,5], generations = 50):
+def dispersive_fly_optimization(swarm_size = 3, min_values = [-5,-5], max_values = [5,5], generations = 50, dt = 0.2):
     population = initial_flies(swarm_size = swarm_size, min_values = min_values, max_values = max_values)
     count = 0
     neighbour_best = best_fly(population)
@@ -53,7 +53,15 @@ def dispersive_fly_optimization(swarm_size = 3, min_values = [-5,-5], max_values
     while (count <= generations):
         print("Generation: ", count, " of ", generations)
         for i in range (0, swarm_size):
+            #for j in range (0, len(min_values)):
             population = update_position(population, neighbour_best, swarm_best, min_values = min_values, max_values = max_values, fly = i)
+            r = int.from_bytes(os.urandom(8), byteorder = "big") / ((1 << 64) - 1)
+            if (r < dt):
+                for j in range(0, len(min_values)):
+                    r = int.from_bytes(os.urandom(8), byteorder = "big") / ((1 << 64) - 1)
+                    population.iloc[i,j] = min_values[j] + r*(max_values[j] - min_values[j])
+                population.iloc[i,-1] = target_function(population.iloc[i,0:population.shape[1]-1])
+                
         neighbour_best = best_fly(population)
         if (swarm_best['Fitness'] > neighbour_best['Fitness']):
            swarm_best = neighbour_best.copy(deep = True)
@@ -68,4 +76,4 @@ def target_function (variables_values = [0, 0]):
     func_value = 4*variables_values[0]**2 - 2.1*variables_values[0]**4 + (1/3)*variables_values[0]**6 + variables_values[0]*variables_values[1] - 4*variables_values[1]**2 + 4*variables_values[1]**4
     return func_value
 
-dispersive_fly_optimization(swarm_size = 25, min_values = [-5,-5], max_values = [5,5], generations = 50)
+dispersive_fly_optimization(swarm_size = 25, min_values = [-5,-5], max_values = [5,5], generations = 50, dt = 0.2)
