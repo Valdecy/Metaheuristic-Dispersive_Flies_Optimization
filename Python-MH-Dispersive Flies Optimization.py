@@ -60,8 +60,7 @@ def dispersive_fly_optimization(swarm_size = 3, min_values = [-5,-5], max_values
                 for j in range(0, len(min_values)):
                     r = int.from_bytes(os.urandom(8), byteorder = "big") / ((1 << 64) - 1)
                     population.iloc[i,j] = min_values[j] + r*(max_values[j] - min_values[j])
-                population.iloc[i,-1] = target_function(population.iloc[i,0:population.shape[1]-1])
-                
+                population.iloc[i,-1] = target_function(population.iloc[i,0:population.shape[1]-1])    
         neighbour_best = best_fly(population)
         if (swarm_best['Fitness'] > neighbour_best['Fitness']):
            swarm_best = neighbour_best.copy(deep = True)
