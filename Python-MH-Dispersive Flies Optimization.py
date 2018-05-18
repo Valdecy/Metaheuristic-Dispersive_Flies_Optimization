@@ -53,7 +53,6 @@ def dispersive_fly_optimization(swarm_size = 3, min_values = [-5,-5], max_values
     while (count <= generations):
         print("Generation: ", count, " of ", generations)
         for i in range (0, swarm_size):
-            #for j in range (0, len(min_values)):
             population = update_position(population, neighbour_best, swarm_best, min_values = min_values, max_values = max_values, fly = i)
         neighbour_best = best_fly(population)
         if (swarm_best['Fitness'] > neighbour_best['Fitness']):
